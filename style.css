@@ -1,0 +1,14 @@
+.like {
+    position: absolute;
+    font-size: 25px;
+    right: 10px;
+    top:10px;
+    color: red;
+    transition: 0.3s;
+}
+
+.like:hover{
+    transition: 0.3s;
+    scale: 1.2;
+    cursor: pointer;
+}
