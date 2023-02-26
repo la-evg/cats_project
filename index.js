@@ -43,7 +43,7 @@ const generateCatCard = (cat) => {
                             <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                                 <button type="button" class="btn btn-outline-dark"><i
                                         class="fa-solid fa-pen"></i></button>
-                                <button type="button" class="btn btn-outline-dark"><i
+                                <button data-action="delete" type="button" class="btn btn-outline-dark"><i
                                         class="fa-solid fa-trash"></i></button>
                   </div>
               </div>
@@ -97,6 +97,32 @@ $wrapper.addEventListener('click', async (event) => {
                 console.log(error)
             }
             break;
+        
+        // Удаление кота
+        case 'delete':
+            try {
+                const res = await api.deleteCat(catId);
+                const response = await res.json();
+                // Выполняем проверку на статус ошибки
+                if (res.status != 200) {
+                    // Открываем окно с уведомлением об ошибке
+                    $errorMessage = document.querySelector('[data-error_message]')
+                    $liveToast = document.querySelector('#liveToast')
+                    $errorMessage.innerText = response.message
+                    $liveToast.classList.add('show')
+                    // Через время скрываем ее
+                    setTimeout(() => {
+                        $liveToast.classList.remove('show')
+                    }, 3000);
+                }
+                // Иначе удаляем карточку
+                else{
+                    $currentCard.remove()
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            break;
 
         default:
             break;
@@ -127,7 +153,7 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
             }, 3000);
         }
         // Иначе - сбрасываем форму, скрываем модалку и рендерим карточку
-        else{
+        else {
             event.target.reset()
             $modalAdd.classList.add(HIDDEN_CLASS)
             $wrapper.insertAdjacentHTML('beforeend', generateCatCard(data))

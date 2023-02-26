@@ -39,6 +39,12 @@ class CatsApi {
       body: JSON.stringify(data)
     })
   }
+  //Удаление кота из базы
+  deleteCat(id) {
+    return fetch(`${this.url}/delete/${id}`, {
+      method: 'DELETE',
+    })
+  }
 }
 
 const DB_NAME = 'la-evg';
