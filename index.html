@@ -24,7 +24,8 @@
             <div class="d-flex align-items-center nav__info ">
                 <h5 class="my-0 mx-5">Котов в базе <span data-count_cats class="badge bg-secondary"></span></h5>
                 <div class="btn-group" role="group" aria-label="Default button group">
-                    <button type="button" class="btn btn-outline-dark"><i class="fa-solid fa-plus"></i></button>
+                    <button type="button" class="btn btn-outline-dark" data-add_button><i
+                            class="fa-solid fa-plus"></i></button>
                     <button type="button" class="btn btn-outline-dark"><i class="fa-solid fa-rotate"></i></button>
                 </div>
             </div>
@@ -32,10 +33,82 @@
     </nav>
 
     <main class="container">
+        <!-- WrapperStart -->
         <div class="row row-cols-auto " data-wrapper>
 
         </div>
+        <!-- WrapperEnd -->
+        <!-- ModalStart -->
+        <div data-modal class="modal-wrapper hidden">
+            <div class="custom-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить кота</h1>
+                        <button type="button" class="btn-close" data-close_addModal aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="d-flex justify-content-center mb-3">
+                            <img class="object-fit-cover rounded" style="height: 250px;" src="./placeholder-image.png"
+                                class="card-img-top" alt="Фото кота" id="cat_photo">
+                        </div>
+                        <form class="row align-items-center" name="add_cats_form">
+                            <div class="form-floating mb-3 col-4">
+                                <input name="id" type="number" class="form-control" id="inputID" placeholder="10"
+                                    min="0">
+                                <label for="inputID" class="px-4">ID</label>
+                            </div>
+                            <div class="form-floating mb-3 col-8">
+                                <input name="name" type="text" class="form-control" id="NameInput"
+                                    placeholder="name@example.com">
+                                <label for="NameInput" class="px-4">Имя</label>
+                            </div>
+                            <div class="form-floating mb-3 col-4">
+                                <input name="age" type="number" class="form-control" id="AgeInput" placeholder="0"
+                                    min="0">
+                                <label for="AgeInput" class="px-4">Возраст</label>
+                            </div>
+                            <div class="form-floating mb-3 col-4">
+                                <input name="rate" type="number" class="form-control" id="RateInput" placeholder="0"
+                                    min="0" max="5">
+                                <label for="RateInput" class="px-4">Рейтинг</label>
+                            </div>
+                            <div class="mb-3 col-4">
+                                <label class="form-check-label mx-2" for="IsLove">
+                                    Любимый?
+                                </label>
+                                <input name="favorite" class="form-check-input" type="checkbox" value="" id="IsLove">
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" name="image" class="form-control" id="URLInput"
+                                    placeholder="www.example.com/image.jpg"
+                                    onchange="document.getElementById('cat_photo').src = this.value;">
+                                <label for="URLInput" class="px-4">Ссылка на фото</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea name="description" class="form-control" style="height: 100px"
+                                    placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                <label for="floatingTextarea" class="px-4">Описание</label>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Отправить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ModalEnd -->
     </main>
+    <!-- ErrorMessage -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast text-bg-danger fade" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" data-error_message>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ErrorMessage -->
 </body>
 
 </html>

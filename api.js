@@ -3,10 +3,11 @@ class CatsApi {
     this.url = `https://cats.petiteweb.dev/api/single/${apiName}`
   }
 
-  // Запрос на получение количества айдишников в базе
+  // Запрос на получение айдишников в базе
   getCountCat() {
     return fetch(`${this.url}/ids`)
   }
+
   // Запрос на получение всех котов в базе
   getAllCats() {
     return fetch(`${this.url}/show`)
@@ -21,6 +22,17 @@ class CatsApi {
   changeCurrentCat(id, data) {
     return fetch(`${this.url}/update/${id}`, {
       method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+  }
+
+  //Запрос на добавление кота
+  addNewCat(data) {
+    return fetch(`${this.url}/add`, {
+      method: 'POST',
       headers: {
         'Content-type': 'application/json'
       },

@@ -2,13 +2,38 @@
     position: absolute;
     font-size: 25px;
     right: 10px;
-    top:10px;
+    top: 10px;
     color: red;
     transition: 0.3s;
 }
 
-.like:hover{
+.like:hover {
     transition: 0.3s;
     scale: 1.2;
     cursor: pointer;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.custom-modal {
+    width: 50%;
+    height: auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 5%;
+}
+
+.modal-wrapper {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background: rgba(36, 36, 36, 0.5);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

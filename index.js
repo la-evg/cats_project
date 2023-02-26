@@ -1,6 +1,21 @@
-// Плашка в шапке сайта под количество котов
 const $countCats = document.querySelector('[data-count_cats]')
 const $wrapper = document.querySelector('[data-wrapper]')
+const $modalAdd = document.querySelector('[data-modal]')
+const $addBtn = document.querySelector('[data-add_button]')
+const $btnCloseModalAdd = document.querySelector('[data-close_addModal]')
+
+
+const HIDDEN_CLASS = 'hidden'
+
+//Кнопка открытия модального окна
+$addBtn.addEventListener('click', () => {
+    $modalAdd.classList.toggle(HIDDEN_CLASS) // открываем модалку
+})
+
+// Кнопка закрытия модального окна
+$btnCloseModalAdd.addEventListener('click', () => {
+    $modalAdd.classList.toggle(HIDDEN_CLASS) // открываем модалку
+})
 
 
 // Функция для вывода количества айдишников в базе
@@ -49,6 +64,7 @@ const firstGettingCats = async () => {
 }
 firstGettingCats();
 
+
 // Слушатель кнопок
 $wrapper.addEventListener('click', async (event) => {
     const $currentCard = event.target.closest('[data-card_id]');
@@ -84,5 +100,39 @@ $wrapper.addEventListener('click', async (event) => {
 
         default:
             break;
+    }
+})
+
+//Преобразование, проверка и отправка формы для добавления кота
+document.forms.add_cats_form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    data.id = Number(data.id)
+    data.age = Number(data.age)
+    data.rate = Number(data.rate)
+    data.favorite = data.favorite == ''
+    try {
+        let res = await api.addNewCat(data)
+        const response = await res.json()
+        // Выполняем проверку на статус ошибки
+        if (res.status != 200) {
+            // Открываем окно с уведомлением об ошибке
+            $errorMessage = document.querySelector('[data-error_message]')
+            $liveToast = document.querySelector('#liveToast')
+            $errorMessage.innerText = response.message
+            $liveToast.classList.add('show')
+            // Через время скрываем ее
+            setTimeout(() => {
+                $liveToast.classList.remove('show')
+            }, 3000);
+        }
+        // Иначе - сбрасываем форму, скрываем модалку и рендерим карточку
+        else{
+            event.target.reset()
+            $modalAdd.classList.add(HIDDEN_CLASS)
+            $wrapper.insertAdjacentHTML('beforeend', generateCatCard(data))
+        }
+    } catch (error) {
+        console.log(error)
     }
 })
