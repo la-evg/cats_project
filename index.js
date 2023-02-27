@@ -67,12 +67,12 @@ firstGettingCats();
 
 // Слушатель кнопок
 $wrapper.addEventListener('click', async (event) => {
-    const $currentCard = event.target.closest('[data-card_id]');
     const action = event.target.dataset.action;
-    const catId = $currentCard.dataset.card_id;
     switch (action) {
         // Изменение статуса favorite (like)
         case 'setLike':
+            $currentCard = event.target.closest('[data-card_id]');
+            catId = $currentCard.dataset.card_id;
             try {
                 // Выполняем проверку статуса favorite
                 const res = await api.getCurrentCat(catId)
@@ -100,6 +100,8 @@ $wrapper.addEventListener('click', async (event) => {
         
         // Удаление кота
         case 'delete':
+            $currentCard = event.target.closest('[data-card_id]');
+            catId = $currentCard.dataset.card_id;
             try {
                 const res = await api.deleteCat(catId);
                 const response = await res.json();
