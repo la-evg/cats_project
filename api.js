@@ -39,6 +39,7 @@ class CatsApi {
       body: JSON.stringify(data)
     })
   }
+
   //Удаление кота из базы
   deleteCat(id) {
     return fetch(`${this.url}/delete/${id}`, {

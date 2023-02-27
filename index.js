@@ -91,13 +91,18 @@ $wrapper.addEventListener('click', async (event) => {
                     iconElem.classList.toggle("fa-solid")
                 }
                 // Меняем статус и изменяем class иконки
-                api.changeCurrentCat(catId, data)
+                const result = await api.changeCurrentCat(catId, data)
+                const response = await result.json()
+                // Вызываем уведомление
+                callNotification('success', response.message, 2000)
+
+
 
             } catch (error) {
                 console.log(error)
             }
             break;
-        
+
         // Удаление кота
         case 'delete':
             $currentCard = event.target.closest('[data-card_id]');
@@ -107,18 +112,13 @@ $wrapper.addEventListener('click', async (event) => {
                 const response = await res.json();
                 // Выполняем проверку на статус ошибки
                 if (res.status != 200) {
-                    // Открываем окно с уведомлением об ошибке
-                    $errorMessage = document.querySelector('[data-error_message]')
-                    $liveToast = document.querySelector('#liveToast')
-                    $errorMessage.innerText = response.message
-                    $liveToast.classList.add('show')
-                    // Через время скрываем ее
-                    setTimeout(() => {
-                        $liveToast.classList.remove('show')
-                    }, 3000);
+                    // Вызываем уведомление
+                    callNotification(generateNotification('danger', response.message), 2000)
                 }
                 // Иначе удаляем карточку
-                else{
+                else {
+                    // Вызываем уведомление
+                    callNotification('success', response.message, 2000)
                     $currentCard.remove()
                 }
             } catch (error) {
@@ -144,23 +144,42 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
         const response = await res.json()
         // Выполняем проверку на статус ошибки
         if (res.status != 200) {
-            // Открываем окно с уведомлением об ошибке
-            $errorMessage = document.querySelector('[data-error_message]')
-            $liveToast = document.querySelector('#liveToast')
-            $errorMessage.innerText = response.message
-            $liveToast.classList.add('show')
-            // Через время скрываем ее
-            setTimeout(() => {
-                $liveToast.classList.remove('show')
-            }, 3000);
+            // Вызываем уведомление
+            callNotification('danger', response.message, 2000)
         }
         // Иначе - сбрасываем форму, скрываем модалку и рендерим карточку
         else {
             event.target.reset()
             $modalAdd.classList.add(HIDDEN_CLASS)
+            // Вызываем уведомление
+            callNotification('success', response.message, 2000)
             $wrapper.insertAdjacentHTML('beforeend', generateCatCard(data))
         }
     } catch (error) {
         console.log(error)
     }
 })
+
+//Генерация уведомления
+const generateNotification = (typeOfMessage, message) => {
+    return (`<div class="toast-container position-fixed bottom-0 end-0 p-3" data-notific>
+    <div id="liveToast" class="toast text-bg-${typeOfMessage} fade show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">${message}
+            </div>
+        </div>
+    </div>
+</div>`)
+}
+
+//Вызов и удаление уведомления
+const callNotification = (typeOfMessage, message, time) => {
+    $wrapper.insertAdjacentHTML('beforeend', generateNotification(typeOfMessage, message))
+    const $notification = document.querySelectorAll('[data-notific]')
+    $notification.forEach(el => {
+        setTimeout(() => {
+            el.remove()
+        }, time);
+    })
+
+}
