@@ -6,15 +6,18 @@ const $btnCloseModalAdd = document.querySelector('[data-close_addModal]')
 
 
 const HIDDEN_CLASS = 'hidden'
+const OVERFLOW = 'overflow'
 
 //Кнопка открытия модального окна
 $addBtn.addEventListener('click', () => {
-    $modalAdd.classList.toggle(HIDDEN_CLASS) // открываем модалку
+    $modalAdd.classList.toggle(HIDDEN_CLASS) // Открываем модалку
+    document.body.classList.toggle(OVERFLOW)
 })
 
 // Кнопка закрытия модального окна
 $btnCloseModalAdd.addEventListener('click', () => {
-    $modalAdd.classList.toggle(HIDDEN_CLASS) // открываем модалку
+    $modalAdd.classList.toggle(HIDDEN_CLASS) //  Закрываем модалку
+    document.body.classList.toggle(OVERFLOW)
 })
 
 
@@ -29,7 +32,7 @@ gettingCountCats();
 // Генерация карточки с котом
 const generateCatCard = (cat) => {
     return (
-        `<div class="col m-2 p-0" data-card_id=${cat.id}>
+        `<div class="col col-sm-auto m-2 p-0 d-flex justify-content-center" data-card_id=${cat.id}>
       <div class="card" style="width: 18rem;">
       <i class="${cat.favorite ? "fa-solid" : "fa-regular"} fa-heart like" data-action="setLike"></i>
           <img class="object-fit-cover rounded" style="height: 250px;"
