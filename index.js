@@ -154,6 +154,7 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
         else {
             event.target.reset()
             $modalAdd.classList.add(HIDDEN_CLASS)
+            document.body.classList.toggle(OVERFLOW)
             // Вызываем уведомление
             callNotification('success', response.message, 2000)
             $wrapper.insertAdjacentHTML('beforeend', generateCatCard(data))
