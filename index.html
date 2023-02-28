@@ -39,12 +39,12 @@
         </div>
         <!-- WrapperEnd -->
         <!-- ModalStart -->
-        <div data-modal class="modal-wrapper hidden">
+        <div data-modal-add class="modal-wrapper hidden">
             <div class="custom-modal modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить кота</h1>
-                        <button type="button" class="btn-close" data-close_addModal aria-label="Закрыть"></button>
+                        <button type="button" class="btn-close" data-close_modal-add aria-label="Закрыть"></button>
                     </div>
                     <div class="modal-body row">
                         <div class="d-flex justify-content-center mb-3">
@@ -98,6 +98,31 @@
             </div>
         </div>
         <!-- ModalEnd -->
+
+        <!-- ModalviewStart -->
+        <div data-modal-view class="modal-wrapper hidden">
+            <div class="custom-modal modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Просмотр кота</h1>
+                        <button type="button" class="btn-close" data-close_modal-view aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body d-flex">
+                        <div class="col-6">
+                            <img class="object-fit-cover rounded photo-in-view" style="height: 250px;"
+                                src="./placeholder-image.png" class="card-img-top" alt="Фото кота" id="cat_photo">
+                        </div>
+                        <div class="col-6">
+                            <table class="table" data-character>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ModalviewEnd -->
     </main>
 </body>
 
