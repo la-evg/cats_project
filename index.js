@@ -45,9 +45,9 @@ const generateCatCard = (cat) => {
                             <button type="button" class="btn btn-outline-dark btn-sm">Посмотреть</button>
                             <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                                 <button type="button" class="btn btn-outline-dark"><i
-                                        class="fa-solid fa-pen"></i></button>
+                                        class="fa-solid fa-pen" style="pointer-events: none"></i></button>
                                 <button data-action="delete" type="button" class="btn btn-outline-dark"><i
-                                        class="fa-solid fa-trash"></i></button>
+                                        class="fa-solid fa-trash" style="pointer-events: none"></i></button>
                   </div>
               </div>
           </div>
