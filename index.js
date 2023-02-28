@@ -157,7 +157,10 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
             document.body.classList.toggle(OVERFLOW)
             // Вызываем уведомление
             callNotification('success', response.message, 2000)
+            // Выводим карточку
             $wrapper.insertAdjacentHTML('beforeend', generateCatCard(data))
+            // Меняем src изображения на стандартный
+            document.querySelector('#cat_photo').src = './placeholder-image.png'
         }
     } catch (error) {
         console.log(error)
