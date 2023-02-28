@@ -122,10 +122,13 @@ $wrapper.addEventListener('click', async (event) => {
                 else {
                     // Вызываем уведомление
                     callNotification('success', response.message, 2000)
+                    // Удаляем Элемент
                     $currentCard.remove()
+                    // Получаем количество котов
+                    gettingCountCats()
                 }
             } catch (error) {
-                console.log(error);
+                alert(error);
             }
             break;
 
@@ -161,6 +164,8 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
             $wrapper.insertAdjacentHTML('beforeend', generateCatCard(data))
             // Меняем src изображения на стандартный
             document.querySelector('#cat_photo').src = './placeholder-image.png'
+            // Получаем количество котов
+            gettingCountCats()
         }
     } catch (error) {
         console.log(error)
