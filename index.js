@@ -2,7 +2,9 @@ const $countCats = document.querySelector('[data-count_cats]')
 const $wrapper = document.querySelector('[data-wrapper]')
 const $modalAdd = document.querySelector('[data-modal-add]')
 const $addBtn = document.querySelector('[data-add_button]')
+const $modalEdit = document.querySelector('[data-modal-edit]')
 const $btnCloseModalAdd = document.querySelector('[data-close_modal-add]')
+const $btnCloseModalEdit = document.querySelector('[data-close_modal-edit]')
 const $btnCloseModalView = document.querySelector('[data-close_modal-view]')
 const $modalView = document.querySelector('[data-modal-view]')
 const $characterInfo = $modalView.querySelector('[data-character]')
@@ -22,6 +24,13 @@ $btnCloseModalAdd.addEventListener('click', () => {
     $modalAdd.classList.toggle(HIDDEN_CLASS) //  Закрываем модалку
     document.body.classList.toggle(OVERFLOW)
 })
+
+// Кнопка закрытия модального окна редактирования
+$btnCloseModalEdit.addEventListener('click', () => {
+    $modalEdit.classList.toggle(HIDDEN_CLASS) //  Закрываем модалку
+    document.body.classList.toggle(OVERFLOW)
+})
+
 
 $btnCloseModalView.addEventListener('click', () => {
     $modalView.classList.toggle(HIDDEN_CLASS) //  Закрываем модалку
@@ -55,7 +64,7 @@ const generateCatCard = (cat) => {
                         <div class="d-flex justify-content-between">
                             <button data-action="view" type="button" class="btn btn-outline-dark btn-sm">Посмотреть</button>
                             <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                                <button type="button" class="btn btn-outline-dark"><i
+                                <button data-action="edit" type="button" class="btn btn-outline-dark"><i
                                         class="fa-solid fa-pen" style="pointer-events: none"></i></button>
                                 <button data-action="delete" type="button" class="btn btn-outline-dark"><i
                                         class="fa-solid fa-trash" style="pointer-events: none"></i></button>
@@ -68,7 +77,7 @@ const generateCatCard = (cat) => {
 }
 
 // Рендер карточек
-const firstGettingCats = async () => {
+const gettingCats = async () => {
     const res = await api.getAllCats();
     const data = await res.json();
 
@@ -76,7 +85,7 @@ const firstGettingCats = async () => {
         $wrapper.insertAdjacentHTML('beforeend', generateCatCard(cat))
     });
 }
-firstGettingCats();
+gettingCats();
 
 
 // Слушатель кнопок
@@ -110,7 +119,7 @@ $wrapper.addEventListener('click', async (event) => {
                 // Вызываем уведомление
                 callNotification('success', response.message, 2000)
             } catch (error) {
-                console.log(error)
+                callNotification('danger', error, 3000)
             }
             break;
 
@@ -136,10 +145,11 @@ $wrapper.addEventListener('click', async (event) => {
                     gettingCountCats()
                 }
             } catch (error) {
-                alert(error);
+                callNotification('danger', error, 3000)
             }
             break;
 
+        // Просмотр кота
         case 'view':
             $currentCard = event.target.closest('[data-card_id]');
             catId = $currentCard.dataset.card_id;
@@ -162,13 +172,40 @@ $wrapper.addEventListener('click', async (event) => {
                         description: 'Описание'
                     }
                     for (key in dict) {
-                        console.log(response[key])
                         $characterInfo.insertAdjacentHTML('beforeend', `<tr><th scope="row" >${dict[key]}</th><td>${response[key]}</td></tr>`)
                     }
                 }
             }
             catch (error) {
-                console.log(error);
+                callNotification('danger', error, 3000)
+            }
+            break;
+
+        // Редактирование кота
+        case 'edit':
+            $currentCard = event.target.closest('[data-card_id]');
+            catId = $currentCard.dataset.card_id;
+            const $formCat = document.forms.cat_form_edit;
+            try {
+                const res = await api.getCurrentCat(catId);
+                const response = await res.json();
+                if (res.status != 200) {
+                    callNotification('danger', response.message, 2000)
+                }
+                else {
+                    $modalEdit.classList.toggle(HIDDEN_CLASS)
+                    document.body.classList.toggle(OVERFLOW)
+
+                    for (key in response) {
+                        $formCat[key].value = response[key]
+                    }
+                    $modalEdit.querySelector('#cat_photo').src = $formCat.image.value
+                    response.favorite ? $formCat.favorite.setAttribute('checked', 'checked') : $formCat.favorite.removeAttribute('checked');
+                    $formCat.image.addEventListener("input", (event) => { $modalEdit.querySelector('#cat_photo').src = $formCat.image.value });
+                }
+            }
+            catch (error) {
+                callNotification('danger', error, 3000)
             }
             break;
 
@@ -212,6 +249,37 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
         console.log(error)
     }
 })
+//Преобразование, проверка и отправка формы для изменения кота
+document.forms.cat_form_edit.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    data.id = Number(data.id)
+    data.age = Number(data.age)
+    data.rate = Number(data.rate)
+    data.favorite = data.favorite == ''
+    try {
+        res = await api.changeCurrentCat(Number(data.id), data)
+        response = await res.json()
+        // Выполняем проверку на статус ошибки
+        if (res.status != 200) {
+            // Вызываем уведомление
+            callNotification('danger', response.message, 2000)
+        }
+        // Иначе - сбрасываем форму, скрываем модалку и рендерим карточку
+        else {
+            event.target.reset()
+            $modalEdit.classList.add(HIDDEN_CLASS)
+            document.body.classList.toggle(OVERFLOW)
+            // Вызываем уведомление
+            callNotification('success', response.message, 2000)
+            // Выводим карточку
+            $wrapper.replaceChildren();
+            gettingCats()
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 //Генерация уведомления
 const generateNotification = (typeOfMessage, message) => {
@@ -227,7 +295,7 @@ const generateNotification = (typeOfMessage, message) => {
 
 //Вызов и удаление уведомления
 const callNotification = (typeOfMessage, message, time) => {
-    $wrapper.insertAdjacentHTML('beforeend', generateNotification(typeOfMessage, message))
+    document.body.insertAdjacentHTML('beforeend', generateNotification(typeOfMessage, message))
     const $notification = document.querySelectorAll('[data-notific]')
     $notification.forEach(el => {
         setTimeout(() => {
