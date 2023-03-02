@@ -244,6 +244,8 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
             document.querySelector('#cat_photo').src = './placeholder-image.png'
             // Получаем количество котов
             gettingCountCats()
+            //Очищаем local storage
+            localStorage.clear();
         }
     } catch (error) {
         console.log(error)
@@ -304,3 +306,29 @@ const callNotification = (typeOfMessage, message, time) => {
     })
 
 }
+
+
+//Local storage
+
+const formDataFromLC = localStorage.getItem(document.forms.add_cats_form.dataset.name);
+const parsedData = formDataFromLC ? JSON.parse(formDataFromLC) : null;
+console.log(formDataFromLC)
+
+if (parsedData) {
+  Object.keys(parsedData).forEach(key => {
+    document.forms.add_cats_form[key].value = parsedData[key]
+  });
+}
+
+
+document.forms.add_cats_form.addEventListener('input', event => {
+  const formData = Object.fromEntries(new FormData(document.forms.add_cats_form).entries());
+
+  localStorage.setItem(document.forms.add_cats_form.dataset.name, JSON.stringify(formData))
+})
+
+document.querySelector('[data-clear_btn]').addEventListener('click', event => {
+  event.preventDefault();
+  localStorage.clear();
+  document.forms.add_cats_form.reset()
+})

@@ -50,7 +50,7 @@
                             <img class="object-fit-cover rounded" style="height: 250px;" src="./placeholder-image.png"
                                 class="card-img-top" alt="Фото кота" id="cat_photo">
                         </div>
-                        <form class="row align-items-center" name="add_cats_form">
+                        <form class="row align-items-center" name="add_cats_form" data-name="formAddCat">
                             <div class="form-floating mb-3 col-4">
                                 <input name="id" type="number" class="form-control" id="inputID" placeholder="10"
                                     min="0">
@@ -89,7 +89,8 @@
                                 <label for="floatingTextarea" class="px-4">Описание</label>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Отправить</button>
+                                <button type="button" class="btn btn-primary mx-3" data-clear_btn><i class="fa-solid fa-rotate"></i></button>
+                                <button type="submit" class="btn btn-success">Отправить</button>
                             </div>
                         </form>
                     </div>
